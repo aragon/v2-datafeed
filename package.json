@@ -1,0 +1,10 @@
+{
+  "name": "@aragon/v2-data-feed",
+  "version": "0.1.0",
+  "private": true,
+  "license": "GPL-3.0",
+  "author": "Facu Spagnuolo<facundo_spagnuolo@icloud.com>",
+  "engines": {
+    "node": ">=12.0.0"
+  }
+}
