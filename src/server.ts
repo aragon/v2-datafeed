@@ -4,6 +4,8 @@ import bodyParser from 'body-parser'
 
 import errorHandler from './middlewares/error-handler'
 import corsMiddleware from './middlewares/cors-middleware'
+import asyncMiddleware from './middlewares/async-middleware'
+import OrganizationController from './controllers/OrganizationController'
 
 dotenv.config()
 
@@ -12,6 +14,8 @@ app.use(corsMiddleware)
 app.use(bodyParser.json())
 
 app.get('/', (req, res) => res.send('Hello!'))
+app.get('/organizations', asyncMiddleware(OrganizationController.all))
+app.get('/organizations/:address', asyncMiddleware(OrganizationController.show))
 
 app.use(errorHandler)
 
