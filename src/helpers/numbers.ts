@@ -1,5 +1,3 @@
-import { BigNumber } from 'ethers'
+import { Decimal } from 'decimal.js'
 
-export type BigNumberish = string | number | BigNumber
-
-export const bn = (x: BigNumberish): BigNumber => BigNumber.from(x)
+export const decimal = (x: string | number): Decimal => new Decimal(x)

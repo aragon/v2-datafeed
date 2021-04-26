@@ -1,6 +1,6 @@
-import { BigNumber } from 'ethers'
+import { Decimal } from 'decimal.js'
 
-import { bn } from '../helpers/numbers'
+import { decimal } from '../helpers/numbers'
 import Logger from '../helpers/logger'
 
 import Asset from '../models/Asset'
@@ -25,7 +25,7 @@ class MigratedValueCalculator {
       const balances = await organization.balances()
       const values = await Promise.all(balances.map(balance => this._calcOrganizationBalanceValue(balance, createdAt)))
 
-      const valueUSD = values.reduce((total, value) => total.add(value), bn(0))
+      const valueUSD = values.reduce((total, value) => total.add(value), decimal(0))
       const ant = await this._getAntPrice(createdAt)
       const valueANT = valueUSD.mul(ant)
       const computedAt = new Date().getTime()
@@ -36,21 +36,21 @@ class MigratedValueCalculator {
     }
   }
 
-  private async _calcOrganizationBalanceValue(balance: OrganizationBalance, createdAt: string): Promise<BigNumber> {
+  private async _calcOrganizationBalanceValue(balance: OrganizationBalance, createdAt: string): Promise<Decimal> {
     const asset = await Asset.findById(balance.assetId)
     const price = await this._getAssetPrice(asset!.address, createdAt)
-    const value = bn(balance.amount).mul(price)
+    const value = decimal(balance.amount).mul(price)
     await balance.$query().update({ price: price.toString(), value: value.toString() })
     return value
   }
 
-  async _getAntPrice(createdAt: string): Promise<BigNumber> {
+  async _getAntPrice(createdAt: string): Promise<Decimal> {
     return this._getAssetPrice(ANT_ADDRESS, createdAt)
   }
 
-  async _getAssetPrice(address: string, createdAt: string): Promise<BigNumber> {
+  async _getAssetPrice(address: string, createdAt: string): Promise<Decimal> {
     // TODO: fetch price from coin-gecko
-    return bn(0)
+    return decimal(0)
   }
 }
 
