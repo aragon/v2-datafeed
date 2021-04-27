@@ -1,4 +1,4 @@
-import HttpError from '../lib/HttpError'
+import HttpError from '../models/HttpError'
 import { Request, Response, NextFunction } from 'express'
 
 export default (err: Error, req: Request, res: Response, next: NextFunction) => {
