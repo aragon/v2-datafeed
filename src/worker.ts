@@ -1,26 +1,18 @@
 import sleep from './helpers/sleep'
 import Logger from './helpers/logger'
 
-import OrganizationsFetcher from './lib/OrganizationsFetcher'
-import MigratedValueCalculator from './lib/MigratedValueCalculator'
+import OrganizationsSynchronizer from './models/OrganizationsSynchronizer'
 
 Logger.setDefaults(false, true)
 const logger = Logger.create('worker')
 
-export async function fetcher() {
+export async function sync() {
   while (true) {
     logger.info(`Checking for new organizations...`)
-    await OrganizationsFetcher.call()
+    await OrganizationsSynchronizer.sync()
     logger.info('Finished, will be back in 1 minute.')
     await sleep(60)
   }
 }
 
-export async function calculator() {
-  while (true) {
-    logger.info(`Calculating migrated value for pending organizations...`)
-    await MigratedValueCalculator.call()
-    logger.info('Finished, will be back in 1 minute.')
-    await sleep(60)
-  }
-}
+sync().then(console.log).catch(console.error)

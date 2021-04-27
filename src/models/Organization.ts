@@ -1,5 +1,4 @@
 import { raw } from 'objection'
-import { BigNumber } from 'ethers'
 
 import { BaseModel } from '../database'
 import OrganizationBalance from './OrganizationBalance'
@@ -21,22 +20,20 @@ export default class Organization extends BaseModel {
   id!: number
   address!: string
   executor!: string
+  value!: string
   createdAt!: string
-  ant?: string
-  valueUSD?: string
-  valueANT?: string
-  computedAt?: string
+  syncedAt?: string
 
   static create({ address, executor, createdAt }: { address: string, executor: string, createdAt: string }): Promise<Organization> {
-    return this.query().insert({ address, executor, createdAt })
+    return this.query().insert({ address, executor, createdAt, value: '0' })
   }
 
   static async count(): Promise<number> {
     return this.query().resultSize()
   }
 
-  static async totalAntValue(): Promise<number> {
-    const results = await this.query().select(raw('coalesce(sum(??), 0)', 'valueANT').as('sum'))
+  static async totalValue(): Promise<number> {
+    const results = await this.query().select(raw('coalesce(sum(??), 0)', 'value').as('sum'))
     // @ts-ignore
     return results[0].sum
   }
@@ -49,15 +46,8 @@ export default class Organization extends BaseModel {
     return this.query().findOne({ address })
   }
 
-  static async withoutValue(): Promise<Organization[]> {
-    return this.query().where({ value: null })
-  }
-
-  async balances(): Promise<OrganizationBalance[]> {
-    return OrganizationBalance.findByOrganization(this)
-  }
-
-  async update({ valueANT, valueUSD, ant, computedAt }: { valueANT: BigNumber, valueUSD: BigNumber, ant: BigNumber, computedAt: number }): Promise<void> {
-    await this.$query().update({ valueUSD: valueUSD.toString(), valueANT: valueANT.toString(), ant: ant.toString(), computedAt: computedAt.toString() })
+  async update({ value }: { value: string }): Promise<void> {
+    const syncedAt = new Date().getTime().toString()
+    await this.$query().update({ value, syncedAt })
   }
 }
