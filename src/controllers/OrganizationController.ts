@@ -26,11 +26,12 @@ export default {
     const organization = await Organization.findByAddress(request.params.address)
     if (!organization) throw HttpError.NOT_FOUND('Organization not found')
 
+    const balances = []
     const orgBalances = await OrganizationBalance.findByOrganization(organization)
-    const balances = Promise.all(orgBalances.map(async ({ assetId, price, amount, value }) => {
+    for (const { assetId, price, amount, value } of orgBalances) {
       const asset = await Asset.findById(assetId)
-      return { asset: { address: asset?.address, symbol: asset?.symbol, decimals: asset?.decimals }, price, amount, value }
-    }));
+      balances.push({ asset: { address: asset?.address, symbol: asset?.symbol, decimals: asset?.decimals }, price, amount, value })
+    }
 
     const { createdAt, address, executor, value, syncedAt } = organization
     response.status(200).send({ createdAt, address, executor, value, syncedAt, balances })

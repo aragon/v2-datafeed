@@ -20,12 +20,12 @@ export default class Organization extends BaseModel {
   id!: number
   address!: string
   executor!: string
-  value!: string
+  value!: number
   createdAt!: string
   syncedAt?: string
 
   static create({ address, executor, createdAt }: { address: string, executor: string, createdAt: string }): Promise<Organization> {
-    return this.query().insert({ address, executor, createdAt, value: '0' })
+    return this.query().insert({ address, executor, createdAt, value: 0 })
   }
 
   static async count(): Promise<number> {
@@ -33,7 +33,7 @@ export default class Organization extends BaseModel {
   }
 
   static async totalValue(): Promise<number> {
-    const results = await this.query().select(raw('coalesce(sum(??), 0)', 'value').as('sum'))
+    const results = await this.query().sum('value')
     // @ts-ignore
     return results[0].sum
   }
@@ -46,8 +46,8 @@ export default class Organization extends BaseModel {
     return this.query().findOne({ address })
   }
 
-  async update({ value }: { value: string }): Promise<void> {
-    const syncedAt = new Date().getTime().toString()
+  async update({ value }: { value: number }): Promise<void> {
+    const syncedAt = new Date().toISOString()
     await this.$query().update({ value, syncedAt })
   }
 }

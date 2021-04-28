@@ -7,7 +7,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string('address').notNullable()
     table.string('executor').notNullable()
     table.dateTime('createdAt').notNullable()
-    table.string('value').notNullable()
+    table.double('value', 10).notNullable()
     table.dateTime('syncedAt')
     table.unique(['address'])
   })

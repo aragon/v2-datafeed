@@ -28,11 +28,11 @@ export default class OrganizationBalance extends BaseModel {
   assetId!: number
   organizationId!: number
   amount!: string
-  price!: string
-  value!: string
+  price!: number
+  value!: number
   createdAt!: string
 
-  static create({ assetId, organizationId, amount, price, value }: { assetId: number, organizationId: number, amount: string, price: string, value: string }): Promise<OrganizationBalance> {
+  static create({ assetId, organizationId, amount, price, value }: { assetId: number, organizationId: number, amount: string, price: number, value: number }): Promise<OrganizationBalance> {
     return this.query().insert({ assetId, organizationId, amount, price, value })
   }
 
