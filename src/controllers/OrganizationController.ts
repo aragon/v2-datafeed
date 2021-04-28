@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 
-import { decimal } from '../helpers/numbers'
+import { decimal, fixed } from '../helpers/numbers'
 
 import Asset from '../models/Asset'
 import HttpError from '../models/HttpError'
@@ -18,7 +18,7 @@ export default {
     const last = (await Organization.last())?.createdAt || 0
     const total = await Organization.totalValue()
     const optionPrice = decimal(total).div(TARGET).mul(REWARD.div(OPTIONS))
-    const option = optionPrice > CAP_PRICE ? CAP_PRICE : optionPrice
+    const option = fixed(optionPrice.gt(CAP_PRICE) ? CAP_PRICE : optionPrice)
     response.status(200).send({ count, last, total, option })
   },
 
