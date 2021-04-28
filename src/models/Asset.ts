@@ -11,7 +11,7 @@ export default class Asset extends BaseModel {
 
   static async findOrCreate({ address, symbol, decimals }: { address: string, symbol: string, decimals: string }): Promise<Asset> {
     const asset = await this.findByAddress(address)
-    return asset ? asset : this.query().insert({ address, symbol, decimals })
+    return asset ? asset : this.query().insert({ address: address.toLowerCase(), symbol, decimals })
   }
 
   static async findById(id: number): Promise<Asset | undefined> {
@@ -19,6 +19,6 @@ export default class Asset extends BaseModel {
   }
 
   static async findByAddress(address: string): Promise<Asset | undefined> {
-    return this.query().findOne({ address })
+    return this.query().findOne({ address: address.toLowerCase() })
   }
 }

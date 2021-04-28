@@ -25,7 +25,7 @@ export default class Organization extends BaseModel {
   syncedAt?: string
 
   static create({ address, executor, createdAt }: { address: string, executor: string, createdAt: string }): Promise<Organization> {
-    return this.query().insert({ address, executor, createdAt, value: 0 })
+    return this.query().insert({ address: address.toLowerCase(), executor, createdAt, value: 0 })
   }
 
   static async count(): Promise<number> {
@@ -43,7 +43,7 @@ export default class Organization extends BaseModel {
   }
 
   static async findByAddress(address: string): Promise<Organization | undefined> {
-    return this.query().findOne({ address })
+    return this.query().findOne({ address: address.toLowerCase() })
   }
 
   async update({ value }: { value: number }): Promise<void> {

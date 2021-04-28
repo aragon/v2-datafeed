@@ -34,8 +34,8 @@ class Coingecko {
       coinsData
         .filter((coinData: any) => coinData?.platforms?.ethereum !== undefined)
         .forEach(({ id, name, symbol, platforms }: any) => {
-          let address = platforms.ethereum;
-          this.coins![address.toLowerCase()] = ({ id, name, symbol, address: address.toLowerCase() })
+          let address = platforms.ethereum.toLowerCase();
+          this.coins![address] = ({ id, name, symbol, address })
         })
     }
     return this.coins
