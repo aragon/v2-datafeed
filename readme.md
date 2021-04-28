@@ -17,9 +17,7 @@ Finally, install dependencies simply with `yarn`, and use one of the following c
 
 ## Server
 
-#### 1. Organizations
-
-##### 1.1. Totals
+### 1.1. Totals
 
   Request:
 
@@ -41,12 +39,12 @@ Finally, install dependencies simply with `yarn`, and use one of the following c
   }
   ```
 
-##### 1.2. Get organization data
+### 1.2. Get organization data
 
   Request:
 
   - Method: `GET`
-  - Path: `/organization/<address>`
+  - Path: `/organizations/<address>`
   - Body: None
 
   Successful response:
