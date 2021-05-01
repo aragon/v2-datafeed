@@ -1,5 +1,3 @@
-import { raw } from 'objection'
-
 import { BaseModel } from '../database'
 import OrganizationBalance from './OrganizationBalance'
 
@@ -21,11 +19,11 @@ export default class Organization extends BaseModel {
   address!: string
   executor!: string
   value!: number
+  migratedAt!: string
   createdAt!: string
-  syncedAt?: string
 
-  static create({ address, executor, createdAt }: { address: string, executor: string, createdAt: string }): Promise<Organization> {
-    return this.query().insert({ address: address.toLowerCase(), executor, createdAt, value: 0 })
+  static create({ address, executor, migratedAt, createdAt }: { address: string, executor: string, migratedAt: string, createdAt: string }): Promise<Organization> {
+    return this.query().insert({ address: address.toLowerCase(), executor, migratedAt, createdAt, value: 0 })
   }
 
   static async count(): Promise<number> {
@@ -47,7 +45,6 @@ export default class Organization extends BaseModel {
   }
 
   async update({ value }: { value: number }): Promise<void> {
-    const syncedAt = new Date().toISOString()
-    await this.$query().update({ value, syncedAt })
+    await this.$query().update({ value })
   }
 }

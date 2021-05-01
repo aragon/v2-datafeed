@@ -54,17 +54,17 @@ Finally, install dependencies simply with `yarn`, and use one of the following c
 
   ```
   {
-    "address":"0x51f22ac850d29c879367a77d241734acb276b815",
-    "executor":"0x49598e2f08d11980e06c5507070f6dd97ce8f0bb",
+    "address": "0x51f22ac850d29c879367a77d241734acb276b815",
+    "executor": "0x49598e2f08d11980e06c5507070f6dd97ce8f0bb",
     "value": 10281.9657152936,
-    "syncedAt":"2021-04-28T00:20:54.991Z",
+    "migratedAt": "2021-04-28T00:20:54.991Z",
     "createdAt": "2021-03-03T00:00:00.000Z",
     "balances":[
       {
         "asset": {
-          "address":"0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-          "symbol":"USDC",
-          "decimals":"6"
+          "address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+          "symbol": "USDC",
+          "decimals": "6"
         },
         "price": 1.0026038727,
         "amount": "10000000000",

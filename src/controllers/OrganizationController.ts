@@ -15,7 +15,7 @@ const CAP_PRICE = decimal(0.1) // 0.1 ANT
 export default {
   async all(request: Request, response: Response) {
     const count = await Organization.count()
-    const last = (await Organization.last())?.createdAt || 0
+    const last = (await Organization.last())?.migratedAt || 0
     const total = await Organization.totalValue()
     const optionPrice = decimal(total).div(TARGET).mul(REWARD.div(OPTIONS))
     const option = fixed(optionPrice.gt(CAP_PRICE) ? CAP_PRICE : optionPrice)
@@ -33,7 +33,7 @@ export default {
       balances.push({ asset: { address: asset?.address, symbol: asset?.symbol, decimals: asset?.decimals }, price, amount, value })
     }
 
-    const { createdAt, address, executor, value, syncedAt } = organization
-    response.status(200).send({ createdAt, address, executor, value, syncedAt, balances })
+    const { address, executor, value, migratedAt, createdAt } = organization
+    response.status(200).send({ address, executor, value, migratedAt, createdAt, balances })
   }
 }
