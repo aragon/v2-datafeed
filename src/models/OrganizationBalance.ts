@@ -1,5 +1,6 @@
 import { BaseModel } from '../database'
 
+import Asset from './Asset'
 import Organization from './Organization'
 
 export default class OrganizationBalance extends BaseModel {
@@ -36,7 +37,15 @@ export default class OrganizationBalance extends BaseModel {
     return this.query().insert({ assetId, organizationId, amount, price, value })
   }
 
+  static async findByOrganizationAndAsset(organization: Organization, asset: Asset): Promise<OrganizationBalance | undefined> {
+    return this.query().findOne({ organizationId: organization.id, assetId: asset.id })
+  }
+
   static findByOrganization(organization: Organization): Promise<OrganizationBalance[]> {
     return this.query().where({ organizationId: organization.id })
+  }
+
+  async update({ amount, price, value }: { amount: string, price: number, value: number }): Promise<void> {
+    await this.$query().update({ amount, price, value })
   }
 }
