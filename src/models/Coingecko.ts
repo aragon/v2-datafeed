@@ -5,6 +5,8 @@ import { Decimal } from 'decimal.js'
 import { decimal } from '../helpers/numbers'
 
 const BASE_URL = 'https://api.coingecko.com/api/v3'
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+const ETHEREUM_COIN_ID = 'ethereum'
 
 type Coins = { [key: string]: Coin }
 
@@ -21,6 +23,7 @@ class Coingecko {
   async getPrice(address: string, at: string): Promise<Decimal> {
     const coins = await this.all()
     const date = moment(at).format('DD-MM-YYYY')
+    if (!coins[address.toLowerCase()]) throw Error(`Missing asset in Coingecko ${address}`)
     const coinId = coins[address.toLowerCase()].id
     const data = await this._get(`/coins/${coinId}/history?date=${date}&localization=false`)
     const price = data?.market_data?.current_price?.usd || 0
@@ -32,9 +35,9 @@ class Coingecko {
       this.coins = {}
       const coinsData: any[] = await this._get('coins/list?include_platform=true')
       coinsData
-        .filter((coinData: any) => coinData?.platforms?.ethereum !== undefined)
+        .filter((coinData: any) => coinData?.platforms?.ethereum !== undefined || coinData?.id === ETHEREUM_COIN_ID)
         .forEach(({ id, name, symbol, platforms }: any) => {
-          let address = platforms.ethereum.toLowerCase();
+          const address = id === ETHEREUM_COIN_ID ? ZERO_ADDRESS : platforms.ethereum.toLowerCase()
           this.coins![address] = ({ id, name, symbol, address })
         })
     }

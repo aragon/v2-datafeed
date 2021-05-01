@@ -62,7 +62,6 @@ class OrganizationsSynchronizer {
     logger.info(`Storing new balance ${symbol} ${amount} for organization ${organization.address}`)
 
     try {
-      // TODO: Handle ETH with Coingecko
       const asset = await Asset.findOrCreate({ address, symbol, decimals })
       if (!asset) throw Error(`Failed trying to find-or-create asset ${symbol} ${address}`)
       const price = await Coingecko.getPrice(asset.address, organization.createdAt)
