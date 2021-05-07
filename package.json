@@ -11,11 +11,12 @@
     "build": "tsc",
     "prestart": "yarn build",
     "knex": "knex --knexfile knexfile.ts",
+    "db:setup": "./scripts/db-setup.sh",
     "db:migrate": "yarn knex migrate:latest",
     "db:rollback": "yarn knex migrate:rollback",
-    "start:server": "yarn build && node build/src/server.js",
+    "start:server": "yarn build && yarn db:setup && node build/src/server.js",
     "start:server:dev": "nodemon ./src/server.ts",
-    "start:worker": "yarn build && node build/src/worker.js",
+    "start:worker": "yarn build && yarn db:setup && node build/src/worker.js",
     "start:worker:dev": "nodemon ./src/worker.ts"
   },
   "dependencies": {
