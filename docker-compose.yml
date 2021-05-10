@@ -1,0 +1,37 @@
+version: "3.7"
+
+services:
+  datafeed_db:
+    image: postgres:11-alpine
+    environment:
+    - POSTGRES_DB:${DB_NAME}
+    - POSTGRES_USER=${DB_USER}
+    - POSTGRES_PASSWORD=${DB_PASS}
+    ports:
+    - "5432:5432"
+    volumes:
+    - ./pgdata:/var/lib/postgresql/data
+
+  datafeed_server:
+    build: .
+    image: aragon/v2-data-feed
+    command: yarn start:server
+    depends_on:
+    - datafeed_db
+    ports:
+    - "${SERVER_PORT}:${SERVER_PORT}"
+    volumes:
+    - ./src:/src
+    env_file:
+    - .env
+
+  datafeed_worker:
+    build: .
+    image: aragon/v2-data-feed
+    command: yarn start:worker
+    depends_on:
+    - datafeed_db
+    volumes:
+    - ./src:/src
+    env_file:
+    - .env
