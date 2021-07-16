@@ -15,8 +15,10 @@
     "db:migrate": "yarn knex migrate:latest",
     "db:rollback": "yarn knex migrate:rollback",
     "start:server": "yarn build && yarn db:setup && node build/src/server.js",
+    "start:server:prod": "yarn db:setup && node build/src/server.js",
     "start:server:dev": "nodemon ./src/server.ts",
     "start:worker": "yarn build && yarn db:setup && node build/src/worker.js",
+    "start:worker:prod": "yarn db:setup && node build/src/worker.js",
     "start:worker:dev": "nodemon ./src/worker.ts"
   },
   "dependencies": {
