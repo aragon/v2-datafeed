@@ -5,7 +5,7 @@ on:
       - 'master'
 env:
   # This is a base repository and we use ${GITHUB_REF##*/} to set the version of the container
-  REPO: docker.pkg.github.com/aragon/v2-datafeed
+  REPO: ghcr.io/aragon/v2-datafeed
 
 jobs:
   build:
@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - if: ${{ !env.ACT }}
-        run: docker login docker.pkg.github.com -u $GITHUB_ACTOR -p ${{secrets.GITHUB_TOKEN}}
+        run: docker login ghcr.io -u $GITHUB_ACTOR -p ${{secrets.GITHUB_TOKEN}}
       - run: .github/scripts/docker-build.sh . $REPO ${GITHUB_SHA}
 
   release:
@@ -22,5 +22,5 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - if: ${{ !env.ACT }}
-        run: docker login docker.pkg.github.com -u $GITHUB_ACTOR -p ${{secrets.GITHUB_TOKEN}}
+        run: docker login ghcr.io -u $GITHUB_ACTOR -p ${{secrets.GITHUB_TOKEN}}
       - run: .github/scripts/docker-release.sh $REPO:${GITHUB_SHA} $REPO:latest
