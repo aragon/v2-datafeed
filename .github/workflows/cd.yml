@@ -2,25 +2,41 @@ name: CD
 on:
   push:
     branches:
-      - 'master'
-env:
-  # This is a base repository and we use ${GITHUB_REF##*/} to set the version of the container
-  REPO: ghcr.io/aragon/v2-datafeed
+      - '*'
+    tags:
+      - '*'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - if: ${{ !env.ACT }}
-        run: docker login ghcr.io -u $GITHUB_ACTOR -p ${{secrets.GITHUB_TOKEN}}
-      - run: .github/scripts/docker-build.sh . $REPO ${GITHUB_SHA}
-
-  release:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - uses: actions/checkout@v2
-      - if: ${{ !env.ACT }}
-        run: docker login ghcr.io -u $GITHUB_ACTOR -p ${{secrets.GITHUB_TOKEN}}
-      - run: .github/scripts/docker-release.sh $REPO:${GITHUB_SHA} $REPO:latest
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1 
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ghcr.io/aragon/v2-datafeed
+          flavor: |
+            latest=${{ github.ref == 'refs/heads/master' }}
+          tags: |
+            type=ref,event=branch
+            type=sha,event=branch,prefix={{branch}}-,format=short
+            type=semver,pattern={{version}}
+      - name: Build
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      - uses: Azure/container-scan@v0
+        id: scan
+        continue-on-error: true
+        with:
+          run-quality-checks: true
+          image-name: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
