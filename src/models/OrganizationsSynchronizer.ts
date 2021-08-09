@@ -35,7 +35,7 @@ class OrganizationsSynchronizer {
     logger.info(`Storing new organization ${address}...`)
 
     try {
-      let organization = await Organization.findByAddress(address)
+      let organization = await Organization.findByExecutor(executor)
       if (organization) {
         // If there was a second migration it's being ignored, only the first one counts
         logger.info(`Found already existing organization ${organization.address} with ID ${organization.id}`)
