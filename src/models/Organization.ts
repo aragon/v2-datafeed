@@ -44,6 +44,10 @@ export default class Organization extends BaseModel {
     return this.query().findOne({ address: address.toLowerCase() })
   }
 
+  static async findByExecutor(executor: string): Promise<Organization | undefined> {
+    return this.query().findOne({ executor: executor.toLowerCase() })
+  }
+
   async update({ value }: { value: number }): Promise<void> {
     await this.$query().update({ value })
   }

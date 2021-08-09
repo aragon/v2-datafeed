@@ -23,7 +23,7 @@ export default {
   },
 
   async show(request: Request, response: Response) {
-    const organization = await Organization.findByAddress(request.params.address)
+    const organization = await Organization.findByExecutor(request.params.address)
     if (!organization) throw HttpError.NOT_FOUND('Organization not found')
 
     const balances = []
