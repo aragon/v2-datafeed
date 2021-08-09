@@ -1,6 +1,10 @@
 import { BaseModel } from '../database'
 import OrganizationBalance from './OrganizationBalance'
 
+import Logger from '../helpers/logger'
+const logger = Logger.create('Org')
+
+
 export default class Organization extends BaseModel {
   static tableName = 'organizations'
 
@@ -45,7 +49,7 @@ export default class Organization extends BaseModel {
   }
 
   static async findByExecutor(executor: string): Promise<Organization | undefined> {
-    console.log("coming for executor here ", executor);
+    logger.info(`coming for executor here ${executor}`);
     return this.query().findOne({ executor: executor.toLowerCase() })
   }
 

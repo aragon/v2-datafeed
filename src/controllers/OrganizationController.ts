@@ -7,6 +7,9 @@ import HttpError from '../models/HttpError'
 import Organization from '../models/Organization'
 import OrganizationBalance from '../models/OrganizationBalance'
 
+import Logger from '../helpers/logger'
+const logger = Logger.create('Controller')
+
 const TARGET = decimal(100e6)  // 100M USD
 const REWARD = decimal(100e3)  // 100k ANT
 const OPTIONS = decimal(1e6)   // 1M
@@ -24,7 +27,8 @@ export default {
 
   async show(request: Request, response: Response) {
     const organization = await Organization.findByExecutor(request.params.address)
-    console.log("organization here ", request.params.address)
+    logger.info(`organization here ${request.params.address}`)
+    
     if (!organization) throw HttpError.NOT_FOUND('Organization not found')
 
     const balances = []
