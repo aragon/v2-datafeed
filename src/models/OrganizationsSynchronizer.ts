@@ -94,11 +94,11 @@ class OrganizationsSynchronizer {
     const last = await Organization.last()
     const latestTimestamp = (last ? Number(last.migratedAt) : 0) / 1000
 
-    logger.info(`Timestamp ${latestTimestamp}`)
+    logger.info(`Timestamp 20 ${latestTimestamp}`)
     logger.info(`organization deadline 123 ${ORGANIZATIONS_CREATION_DEADLINE}`)
-    logger.info(`url 123 ${url}`);
-    logger.info(`migrations (where: { executed: true, executedAt_gte: ${latestTimestamp}, daoCreatedAt_lte: ${ORGANIZATIONS_CREATION_DEADLINE} }, orderBy: createdAt`)
-    logger.info(`network ${network}`);
+    logger.info(`url 456 ${url}`);
+    logger.info(`migrations 123 (where: { executed: true, executedAt_gte: ${latestTimestamp}, daoCreatedAt_lte: ${ORGANIZATIONS_CREATION_DEADLINE} }, orderBy: createdAt`)
+    logger.info(`network 123${network}`);
 
     const result = await request(url, `{
       migrations (where: { executed: true, executedAt_gte: ${latestTimestamp}, daoCreatedAt_lte: ${ORGANIZATIONS_CREATION_DEADLINE} }, orderBy: createdAt) {
