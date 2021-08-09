@@ -24,6 +24,7 @@ export default {
 
   async show(request: Request, response: Response) {
     const organization = await Organization.findByExecutor(request.params.address)
+    console.log("organization here ", request.params.address)
     if (!organization) throw HttpError.NOT_FOUND('Organization not found')
 
     const balances = []

@@ -45,6 +45,7 @@ export default class Organization extends BaseModel {
   }
 
   static async findByExecutor(executor: string): Promise<Organization | undefined> {
+    console.log("coming for executor here ", executor);
     return this.query().findOne({ executor: executor.toLowerCase() })
   }
 
