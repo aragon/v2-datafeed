@@ -96,7 +96,10 @@ class OrganizationsSynchronizer {
 
     logger.info(`Timestamp ${latestTimestamp}`)
     logger.info(`organization deadline ${ORGANIZATIONS_CREATION_DEADLINE}`)
-
+    logger.info(`url ${url}`);
+    logger.info(`migrations (where: { executed: true, executedAt_gte: ${latestTimestamp}, daoCreatedAt_lte: ${ORGANIZATIONS_CREATION_DEADLINE} }, orderBy: createdAt`)
+    logger.info(`network ${network}`);
+    
     const result = await request(url, `{
       migrations (where: { executed: true, executedAt_gte: ${latestTimestamp}, daoCreatedAt_lte: ${ORGANIZATIONS_CREATION_DEADLINE} }, orderBy: createdAt) {
         executedAt
