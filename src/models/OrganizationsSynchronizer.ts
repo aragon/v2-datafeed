@@ -12,7 +12,7 @@ import OrganizationBalance from './OrganizationBalance'
 const logger = Logger.create('synchronizer')
 
 // TODO: Fix this with the datetime of the first vote on Snapshot
-const ORGANIZATIONS_CREATION_DEADLINE = '1619816075'
+const ORGANIZATIONS_CREATION_DEADLINE = '1660056576'
 
 const SUBGRAPH_URL: { [key: string]: string } = {
   rinkeby: 'https://api.thegraph.com/subgraphs/name/aragon/aragon-migrator-rinkeby',
