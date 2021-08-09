@@ -15,7 +15,7 @@ const logger = Logger.create('synchronizer')
 const ORGANIZATIONS_CREATION_DEADLINE = '1660056576'
 
 const SUBGRAPH_URL: { [key: string]: string } = {
-  rinkeby: 'https://api.thegraph.com/subgraphs/name/aragon/aragon-migrator-rinkeby',
+  rinkeby: 'https://api.thegraph.com/subgraphs/name/aragon/aragon-migrator-rinkeby-staging',
   mainnet: 'https://api.thegraph.com/subgraphs/name/aragon/aragon-migrator-mainnet',
 }
 
@@ -96,7 +96,7 @@ class OrganizationsSynchronizer {
 
     logger.info(`Timestamp ${latestTimestamp}`)
     logger.info(`organization deadline ${ORGANIZATIONS_CREATION_DEADLINE}`)
-    
+
     const result = await request(url, `{
       migrations (where: { executed: true, executedAt_gte: ${latestTimestamp}, daoCreatedAt_lte: ${ORGANIZATIONS_CREATION_DEADLINE} }, orderBy: createdAt) {
         executedAt
