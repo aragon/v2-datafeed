@@ -12,11 +12,13 @@ import OrganizationBalance from './OrganizationBalance'
 const logger = Logger.create('synchronizer')
 
 // TODO: Fix this with the datetime of the first vote on Snapshot
+// TODO:GIORGI fix this with the following timestamp 1621006988(which is 2021-05-14T15:43:08Z)
 const ORGANIZATIONS_CREATION_DEADLINE = '1660056576'
 
 const SUBGRAPH_URL: { [key: string]: string } = {
-  rinkeby: 'https://api.thegraph.com/subgraphs/name/aragon/aragon-migrator-rinkeby-staging',
-  mainnet: 'https://api.thegraph.com/subgraphs/name/aragon/aragon-migrator-mainnet',
+  rinkeby: 'https://api.thegraph.com/subgraphs/name/aragon/aragon-migrator-rinkeby',
+  staging: 'https://api.thegraph.com/subgraphs/name/aragon/aragon-migrator-rinkeby-staging',
+  mainnet: 'https://api.thegraph.com/subgraphs/name/aragon/aragon-migrator-mainnet'
 }
 
 class OrganizationsSynchronizer {
@@ -34,14 +36,27 @@ class OrganizationsSynchronizer {
     console.log('\n\n')
     logger.info(`Storing new organization ${address}...`)
 
+     /**
+     * The Problem might arise for a) and b) because the current solution doesn't encounter for this.
+     * a) the two different organizations try to migrate to the same executor
+     *     org1 - exec1
+     *     org2 - exec1
+     * b) the same organization tries to migrate to the different executors.
+     *     org1 - exec1
+     *     org1 - exec2
+     * c) all organizations try to migrate to different executors
+     *     org1 - exec1
+     *     org2 - exec2
+     */
+
     try {
-      let organization = await Organization.findByExecutor(executor)
+      let organization = await Organization.findByAddress(address)
       if (organization) {
         // If there was a second migration it's being ignored, only the first one counts
-        logger.info(`Found already existing organization ${organization.address} with ID ${organization.id}`)
+        logger.info(`Found already existing organizationn ${organization.address} with ID ${organization.id}`)
       } else {
         organization = await Organization.create({ address, executor, migratedAt: new Date(migratedAt * 1000).toISOString(), createdAt: new Date(createdAt * 1000).toISOString() })
-        logger.success(`Stored new organization ${organization.address} with ID ${organization.id}`)
+        logger.success(`Stored new organizationn ${organization.address} with ID ${organization.id}`)
         logger.info(`Storing ${balances.length} new balances for organization ${organization.address}...`)
       }
 
@@ -64,9 +79,15 @@ class OrganizationsSynchronizer {
     try {
       const asset = await Asset.findOrCreate({ address, symbol, decimals })
       if (!asset) throw Error(`Failed trying to find-or-create asset ${symbol} ${address}`)
-      const price = await Coingecko.getPrice(asset.address, organization.createdAt)
-      const precision = decimal(10).pow(decimals)
-      const value = decimal(amount).div(precision).mul(price)
+
+      let price = decimal(0), 
+          value = decimal(0);
+        
+      if(process.env.NETWORK === 'mainnet') {
+        price = await Coingecko.getPrice(asset.address, organization.createdAt)
+        const precision = decimal(10).pow(decimals)
+        value = decimal(amount).div(precision).mul(price) 
+      }
 
       let balance = await OrganizationBalance.findByOrganizationAndAsset(organization, asset)
       if (balance) {
@@ -93,12 +114,6 @@ class OrganizationsSynchronizer {
 
     const last = await Organization.last()
     const latestTimestamp = (last ? Number(last.migratedAt) : 0) / 1000
-
-    logger.info(`Timestamp 20 ${latestTimestamp}`)
-    logger.info(`organization deadline 123 ${ORGANIZATIONS_CREATION_DEADLINE}`)
-    logger.info(`url 456 ${url}`);
-    logger.info(`migrations 123 (where: { executed: true, executedAt_gte: ${latestTimestamp}, daoCreatedAt_lte: ${ORGANIZATIONS_CREATION_DEADLINE} }, orderBy: createdAt`)
-    logger.info(`network 123${network}`);
 
     const result = await request(url, `{
       migrations (where: { executed: true, executedAt_gte: ${latestTimestamp}, daoCreatedAt_lte: ${ORGANIZATIONS_CREATION_DEADLINE} }, orderBy: createdAt) {

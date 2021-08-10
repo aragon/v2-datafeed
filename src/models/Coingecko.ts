@@ -4,7 +4,7 @@ import { Decimal } from 'decimal.js'
 
 import { decimal } from '../helpers/numbers'
 
-const BASE_URL = 'https://api.coingecko.com/api/v3'
+const BASE_URL = 'https://api.coingecko.com/api/v3/coins/list?include_platform=true'
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 const ETHEREUM_COIN_ID = 'ethereum'
 
