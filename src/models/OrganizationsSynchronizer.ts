@@ -34,7 +34,7 @@ class OrganizationsSynchronizer {
   private async _storeOrganization(organizationData: any) {
     const { address, migratedAt, createdAt, executor, balances } = organizationData
     console.log('\n\n')
-    logger.info(`Storing new organization ${address}...`)
+    logger.info(`Storing new organizationnn ${address}...`)
 
      /**
      * The Problem might arise for a) and b) because the current solution doesn't encounter for this.
