@@ -16,7 +16,7 @@ export default {
   async all(request: Request, response: Response) {
     const count = await Organization.count()
     const last = (await Organization.last())?.migratedAt || 0
-    const total = await Organization.totalValue()
+    const total = await Organization.totalValue() || 0
     const optionPrice = decimal(total).div(TARGET).mul(REWARD.div(OPTIONS))
     const option = fixed(optionPrice.gt(CAP_PRICE) ? CAP_PRICE : optionPrice)
     response.status(200).send({ count, last, total, option })
