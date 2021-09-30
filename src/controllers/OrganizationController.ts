@@ -23,6 +23,7 @@ export default {
     if(process.env.NETWORK === 'mainnet') {
       let price = await Coingecko.getPrice('0x6b175474e89094c44da98b954eedeac495271d0f', new Date(1633018920000).toISOString())
       const precision = decimal(10).pow(18)
+      console.log(precision);
       let value = decimal(49754935512174713021665).div(precision).mul(price) 
       totalValue = totalValue.add(value)
     }
