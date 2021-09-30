@@ -4,7 +4,7 @@ import { Decimal } from 'decimal.js'
 
 import { decimal } from '../helpers/numbers'
 
-const BASE_URL = 'https://api.coingecko.com/api/v3/coins/list?include_platform=true'
+const BASE_URL = 'https://api.coingecko.com/api/v3'
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 const ETHEREUM_COIN_ID = 'ethereum'
 
@@ -25,7 +25,7 @@ class Coingecko {
     const date = moment(at).format('DD-MM-YYYY')
     if (!coins[address.toLowerCase()]) throw Error(`Missing asset in Coingecko ${address}`)
     const coinId = coins[address.toLowerCase()].id
-    const data = await this._get(`/coins/${coinId}/history?date=${date}&localization=false`)
+    const data = await this._get(`coins/${coinId}/history?date=${date}&localization=false`)
     const price = data?.market_data?.current_price?.usd || 0
     return decimal(price)
   }
